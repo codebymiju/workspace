@@ -15,6 +15,8 @@ import action.BoardDetailAction;
 import action.BoardListAction;
 import action.BoardModifyFormAction;
 import action.BoardModifyProAction;
+import action.BoardReplyFormAction;
+import action.BoardReplyProAction;
 import action.BoardWriteProAction;
 import vo.ActionForward;
 
@@ -81,12 +83,22 @@ public class BoardFrontController extends HttpServlet {
 			
 			action = new BoardModifyFormAction();
 			forward = action.execute(request, response);
-		} else if (command.equals("/BoardModifyPro.bo")) { // 셀프
+		} else if (command.equals("/BoardModifyPro.bo")) { // 12/07
 			System.out.println("글 수정 작업 실행");
 			
 			action = new BoardModifyProAction();
 			forward = action.execute(request, response);
-		}
+		} else if (command.equals("/BoardReplyForm.bo")) { // 12/07 6
+			System.out.println("게시판 답글 작성");
+			
+			action = new BoardReplyFormAction();
+			forward = action.execute(request, response);
+		} else if (command.equals("/BoardReplyPro.bo")) { // 12/07 6-(1)
+			System.out.println("게시판 답글 작성 작업 수행");
+			
+			action = new BoardReplyProAction();
+			forward = action.execute(request, response);
+		} 
 		//--------------------------------------------------------------------
 		// ActionForward 객체 내용에 따라 각각 다른 방식의 포워딩 작업 실행 (11/30)
 		// 위의 서블릿 주소 판별 후 시행되는 코드 (공통의 작업)

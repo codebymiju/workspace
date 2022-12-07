@@ -15,10 +15,10 @@ public class BoardModifyFormAction implements Action {
 		ActionForward forward = null;
 		
 		int board_num = Integer.parseInt(request.getParameter("board_num"));
-//		System.out.println(board_num);
 		
+		//12/07 2-(1). isUpdateReadcount() 파라미터값 추가
 		BoardDetailService service = new BoardDetailService();
-		BoardBean board = service.getBoard(board_num);
+		BoardBean board = service.getBoard(board_num, false);
 		
 		request.setAttribute("board", board);
 		

@@ -3,24 +3,23 @@ package action;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
 
-import javax.mail.Multipart;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
+import svc.BoardReplyProService;
 import svc.BoardWriteProService;
 import vo.ActionForward;
 import vo.BoardBean;
 
-public class BoardWriteProAction implements Action {
+public class BoardReplyProAction implements Action {
 
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("BoardWriteProAction");
+		System.out.println("BoardReplyProAction");
 		
 		ActionForward forward = null; // 만들고 return까지 필수!
 		
@@ -48,33 +47,24 @@ public class BoardWriteProAction implements Action {
 			
 			// 전달받은 파라미터 데이터를 BoardBean 클래스(데이터 관리) 인스턴스 생성 후 저장
 			BoardBean board = new BoardBean();
-				board.setBoard_name(multi.getParameter("board_name"));
-				board.setBoard_pass(multi.getParameter("board_pass"));
-				board.setBoard_subject(multi.getParameter("board_subject"));
-				board.setBoard_content(multi.getParameter("board_content"));
-//			System.out.println(board);
-			
-			// 파일명은 getParameter()로 처리 불가
-			// -> 원본 파일명 : getOriginalFileName()
-			// -> 중복 처리된(실제 업로드 되는) 파일명 : getFilesystemName() 
-//			System.out.println(multi.getOriginalFileName("board_file"));
-//			System.out.println(multi.getFilesystemName("board_file"));
+			board.setBoard_name(multi.getParameter("board_name"));
+			board.setBoard_pass(multi.getParameter("board_pass"));
+			board.setBoard_subject(multi.getParameter("board_subject"));
+			board.setBoard_content(multi.getParameter("board_content"));
 			board.setBoard_file(multi.getOriginalFileName("board_file"));
 			board.setBoard_real_file(multi.getFilesystemName("board_file"));
-//			System.out.println(board);
-				
-			// 1) 파일명 관리하는 객체를 통해 파라미터 목록 가져와서 활용(반복)
-//			Enumeration e = multi.getFileNames(); 
-//			while(e.hasMoreElements()) {
-//				String fileElement = e.nextElement().toString();
-//				System.out.println("원본 파일명 : " + multi.getOriginalFileName(fileElement));
-//				System.out.println("실제 파일명 : " + multi.getFilesystemName(fileElement));
-//			}
+			
+			// 12/07 6.
+			//만약, 파일명이 null 일 경ㅇ우 널스트링으로 교체(답글은 파일 업로드가 선택사항)
+			if(board.getBoard_file() == null) {
+				board.setBoard_file("");
+				board.setBoard_real_file("");
+			}
 			
 			//=============================================================================
-			// BoardWriteProService 클래스 인스턴스 생성 후 글쓰기 작업 요청
-			BoardWriteProService service = new BoardWriteProService();
-			boolean isWriteSuccess = service.registBoard(board);
+			// 12/07 6. 서비스명 변경
+			BoardReplyProService service = new BoardReplyProService();
+			boolean isWriteSuccess = service.registReplyBoard(board);
 			
 			// 글쓰기 요청 처리결과 판별
 			if(!isWriteSuccess) { // 실패시
@@ -93,7 +83,7 @@ public class BoardWriteProAction implements Action {
 				response.setContentType("text/html; charset=UTF-8"); // html 형식 넘겨준다는 표시
 				PrintWriter out = response.getWriter(); // 자바 코드를 위해 html태그 출력
 				out.println("<script>");
-				out.println("alert('글쓰기 실패!')");
+				out.println("alert('답글 쓰기 실패!')");
 				out.println("history.back()");
 				out.println("</script>");
 				
@@ -103,13 +93,9 @@ public class BoardWriteProAction implements Action {
 			// (Action 클래스에서 이동하는 일은 없다!! 무조건 controller 까지 간다!!!)
 				
 			} else { // 성공시
-				// 컨트롤러에게 포워딩 경로, 방식 전달 위해 Action 객체 생성
-				// 아래에 적은 내용을 return > 컨트롤러 (들고가서 실행)
-				// 컨트롤러에서 실행!!!(되는 코드 따라가서 거기서 이동)
-				// 아래의 코드와 자바스크립트 코드(if안에 있는)는 공존할 수 없다!!
-				// 따로 서블릿주소 줘서 이동 후 실행해야함
+				// 06. pageNum도 같이 넘긴다
 				forward = new ActionForward();
-				forward.setPath("BoardList.bo");
+				forward.setPath("BoardList.bo?pageNum=" + multi.getParameter("pageNum"));
 				forward.setRedirect(true);
 			}
 				

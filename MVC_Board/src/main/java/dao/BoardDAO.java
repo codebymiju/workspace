@@ -244,7 +244,7 @@ public class BoardDAO {
 		return updateCount;
 	} // updateReadCount()
 	
-// 6 패스워드 일치 여부 확인 작업 수행 (조회)
+	// 12/07 - 6 패스워드 일치 여부 확인 작업 수행 (조회)
 	public boolean isBoardWriter(int board_num, String board_pass) {
 		boolean isBoardWriter = false;
 		
@@ -294,20 +294,32 @@ public class BoardDAO {
 		return deleteCount;
 	} //deleteBoard()
 
-	// 12/05 숙제
-	public int updateBoard(int board_num, String board_name, String board_pass, String board_subject, String board_content) {
+	// 12/07 1-(2).2  & 3-(1)
+	// 수정된 내용 업데이트 하는 메서드
+	public int updateBoard(BoardBean board) {
 		int updateCount = 0;
-		
 		PreparedStatement pstmt = null;
-		
-		try {
-			String sql = "UPDATE board SET board_name=?, board_pass=?, board_subject=?, board_content=? WHERE board_num=?";
+		try { // 3-(1) 제목, 내용은 고정이고 파일명은 변동이니 분리하기 
+			String sql = "UPDATE board SET board_subject=?, board_content=?";
+			
+							// 단, 파일명(board_file)이 null이 아닐 경우에만 파일명도 수정
+							// -> 즉, 파일명을 수정하는 SET절을 문장에 추가 결합
+							if(board.getBoard_file() != null) {
+								sql += ", board_file = ?, board_real_file = ?";
+							}
+					sql += " WHERE board_num=?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, board_name);
-			pstmt.setString(2, board_pass);
-			pstmt.setString(3, board_subject);
-			pstmt.setString(4, board_content);
-			pstmt.setInt(5, board_num);
+			pstmt.setString(1, board.getBoard_subject());
+			pstmt.setString(2, board.getBoard_content());
+			
+			// 파일명 != null 일때만 파일명 파라미터 교체하는 set()
+			if(board.getBoard_file() != null) { // != null 보드넘은 5번째
+				pstmt.setString(3, board.getBoard_file());
+				pstmt.setString(4, board.getBoard_real_file());
+				pstmt.setInt(5, board.getBoard_num());
+			} else { // 파일명 = null은 마지막 보드넘이 3번째
+				pstmt.setInt(3, board.getBoard_num());
+			}
 			
 			updateCount = pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -320,6 +332,42 @@ public class BoardDAO {
 		}
 		
 		return updateCount;
+	} // updateBoard()
+
+	// 12/07 6.답글 입력하는 메서드 (미완성)
+	public int insertReplyBoard(BoardBean board) {
+		
+		int insertCount = 0;
+		
+		PreparedStatement pstmt = null, pstmt2 = null;
+		ResultSet rs = null;
+		
+		try {
+			int board_num = 1;
+			
+			String sql = "SELECT MAX(board_num) FROM board";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();	
+			
+			if(rs.next()) {
+				board_num = rs.getInt(1) + 1;
+			} // idx = 1 로 설정해둬서 else 필요 없음
+			
+			System.out.println("새 글 번호 : " + board_num);
+			//----------------------------------------------------------------
+			
+			
+		} catch (SQLException e) {
+			System.out.println("BoardDAO - selectBoardList()");
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(rs);
+			JdbcUtil.close(pstmt);
+			// 주의! Connection 객체는 Service 클래스가 관리하므로 close(con)금지!!!
+			// JdbcUtil.close(con) 하면 service로 넘어가서 nullPointerException 발생
+		}
+		
+		return insertCount;
 	}
 
 
