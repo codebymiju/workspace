@@ -8,6 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>MVC 게시판</title>
+<link href="css/default.css" rel="stylesheet" type="text/css">
 <style type="text/css">
 	#listForm {
 		width: 1024px;
@@ -63,6 +64,10 @@
 </style>
 </head>
 <body>
+	<header>
+		<!-- login, join 표시 영역 -->
+		<jsp:include page="/inc/top.jsp"></jsp:include>
+	</header>
 	<!-- 게시판 리스트 -->
 	<section id="listForm">
 	<h2>게시판 글 목록</h2>
@@ -91,6 +96,14 @@
 					</c:otherwise>
 				</c:choose>
 				<td id="subject">
+					<%-- 12/09 RE:답글 관련 처리 (답글 시이미지 추가) --%>
+					<c:if test="${board.board_re_lev > 0}">
+						<%-- 반복문을 통해 board_re_lev 값 만큼 공백 추가 --%>
+						<c:forEach var="i" begin="1" end="${board.board_re_lev}">
+							&nbsp;&nbsp;
+						</c:forEach>
+						<img src="images/re.gif">
+					</c:if>
 					<a href="BoardDetail.bo?board_num=${board.board_num}&pageNum=${pageNum}"> 
 					${board.board_subject}
 					</a>
@@ -98,7 +111,8 @@
 				<td>${board.board_name}</td>
 				<td>
 					<%--JSTL의 fmt 활용  --%>
-					<fmt:formatDate value="${board.board_date}" pattern="yy-MM-dd HH:MM"/>
+					<%--pattern yy-MM-dd HH:mm --%>
+					<fmt:formatDate value="${board.board_date}" pattern="yy-MM-dd HH:mm"/>
 				</td>
 				<td>${board.board_readcount}</td>
 			</tr>

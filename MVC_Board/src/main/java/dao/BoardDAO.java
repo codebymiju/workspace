@@ -334,7 +334,7 @@ public class BoardDAO {
 		return updateCount;
 	} // updateBoard()
 
-	// 12/07 6.답글 입력하는 메서드 (미완성)
+	// 12/09 1.답글 입력하는 메서드 
 	public int insertReplyBoard(BoardBean board) {
 		
 		int insertCount = 0;
@@ -353,22 +353,55 @@ public class BoardDAO {
 				board_num = rs.getInt(1) + 1;
 			} // idx = 1 로 설정해둬서 else 필요 없음
 			
-			System.out.println("새 글 번호 : " + board_num);
 			//----------------------------------------------------------------
+			// 기존 답글들에 대한 순서번호 증가 = UPDATE 구문
+			// -> board_re_ref가 일치하고 board_re_seq보다 큰 레코드들의 순서번호 +1 시키기
+			int ref = board.getBoard_re_ref(); // 원본글의 참조글번호
+			int lev = board.getBoard_re_lev(); // 원본글의 들여쓰기레벨
+			int seq = board.getBoard_re_seq(); // 원본글의 순서번호
 			
+			sql = "UPDATE board SET board_re_seq = board_re_seq + 1"
+					+ " WHERE board_re_ref = ? AND board_re_seq > ?";
+			pstmt2 = con.prepareStatement(sql);
+			pstmt2.setInt(1, ref);
+			pstmt2.setInt(2, seq);
+			pstmt2.executeUpdate();
+			
+			JdbcUtil.close(pstmt2);
+			
+			// 새 답글에 사용될 lev, seq 값 + 1
+			lev++;
+			seq++;
+			//----------------------------------------------------------------
+			// 답글에 대한 INSERT 작업 수행
+			// 글쓰기와 달리 ref, lev, seq는 새로 설정된 값으로 변경
+			sql = "INSERT INTO board VALUES(?,?,?,?,?,?,?,?,?,?,?,now())";
+			pstmt2 = con.prepareStatement(sql);
+			
+			pstmt2.setInt(1, board_num);
+			pstmt2.setString(2, board.getBoard_name());
+			pstmt2.setString(3, board.getBoard_pass());
+			pstmt2.setString(4, board.getBoard_subject());
+			pstmt2.setString(5, board.getBoard_content());
+			pstmt2.setString(6, board.getBoard_file());
+			pstmt2.setString(7, board.getBoard_real_file());
+			pstmt2.setInt(8, ref); // 참조글번호(글쓰기는 글번호와 동일하게 사용) - 변경
+			pstmt2.setInt(9, lev); // 들여쓰기 레벨 - 변경
+			pstmt2.setInt(10, seq); // 순서번호 - 변경
+			pstmt2.setInt(11, 0); // 조회수
+			
+			insertCount = pstmt2.executeUpdate();
 			
 		} catch (SQLException e) {
-			System.out.println("BoardDAO - selectBoardList()");
+			System.out.println("BoardDAO - insertReplyBoard()");
 			e.printStackTrace();
 		} finally {
 			JdbcUtil.close(rs);
 			JdbcUtil.close(pstmt);
-			// 주의! Connection 객체는 Service 클래스가 관리하므로 close(con)금지!!!
-			// JdbcUtil.close(con) 하면 service로 넘어가서 nullPointerException 발생
+			JdbcUtil.close(pstmt2);
 		}
-		
 		return insertCount;
-	}
+	} // insertReplyBoard
 
 
 }

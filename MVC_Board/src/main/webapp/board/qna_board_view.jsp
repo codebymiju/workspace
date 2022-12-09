@@ -7,6 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <title>MVC 게시판</title>
+<link href="css/default.css" rel="stylesheet" type="text/css">
 <style type="text/css">
 	#articleForm {
 		width: 500px;
@@ -56,6 +57,10 @@
 </style>
 </head>
 <body>
+	<header>
+		<!-- login, join 표시 영역 -->
+		<jsp:include page="/inc/top.jsp"></jsp:include>
+	</header>
 	<!-- 12/05 02-(1) 조회결과 표시(본문) + 파일 다운로드 가능하도록-->
 	<!-- 게시판 상세내용 보기 -->
 	<section id="articleForm">

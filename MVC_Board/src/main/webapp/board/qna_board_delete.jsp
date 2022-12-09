@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>MVC 게시판</title>
+<link href="css/default.css" rel="stylesheet" type="text/css">
 <style>
 	#passForm {
 		width: 300px;
@@ -27,6 +28,10 @@
 </style>
 </head>
 <body>
+	<header>
+		<!-- login, join 표시 영역 -->
+		<jsp:include page="/inc/top.jsp"></jsp:include>
+	</header>
 	<!-- 12/05 3-(1) 삭제시 BoardDeletePro.bo로 이동-->
 	<h2>게시판 글 삭제</h2>
 	<section id="passForm">

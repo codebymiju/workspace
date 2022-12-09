@@ -53,9 +53,13 @@ public class BoardReplyProAction implements Action {
 			board.setBoard_content(multi.getParameter("board_content"));
 			board.setBoard_file(multi.getOriginalFileName("board_file"));
 			board.setBoard_real_file(multi.getFilesystemName("board_file"));
+			// 12/09 추가
+			board.setBoard_re_ref(Integer.parseInt(multi.getParameter("board_re_ref")));
+			board.setBoard_re_lev(Integer.parseInt(multi.getParameter("board_re_lev")));
+			board.setBoard_re_seq(Integer.parseInt(multi.getParameter("board_re_seq")));
 			
 			// 12/07 6.
-			//만약, 파일명이 null 일 경ㅇ우 널스트링으로 교체(답글은 파일 업로드가 선택사항)
+			//만약, 파일명이 null 일 경우 널스트링으로 교체(답글은 파일 업로드가 선택사항)
 			if(board.getBoard_file() == null) {
 				board.setBoard_file("");
 				board.setBoard_real_file("");
