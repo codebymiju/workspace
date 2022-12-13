@@ -7,6 +7,15 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link href="css/default.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	table {
+		margin: auto;
+	}
+	
+	h1 {
+		text-align: center;
+	}
+</style>
 </head>
 <body>
 	<header>

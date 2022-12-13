@@ -32,6 +32,7 @@
 	
 	table td {
 		text-align: center;
+		border-style: groove;
 	}
 	
 	#subject {
@@ -64,6 +65,7 @@
 </style>
 </head>
 <body>
+	<!-- 12/12 추가사항 + 주소창에서 접근 불가능하게 sId 가져와서 불일치시 접근 막기  -->
 	<header>
 		<!-- login, join 표시 영역 -->
 		<jsp:include page="/inc/top.jsp"></jsp:include>
@@ -89,6 +91,8 @@
 				<td>${member.gender }</td>
 				<td><fmt:formatDate value="${member.date}" pattern="yy-MM-dd"/></td>
 			</tr>
+			<!-- 12/12 추가사항 + 수정, 삭제 버튼 추가로 회원정보 수정, 삭제 가능하도록 
+			  location.href='MemberUpdate.me?id=${member.id}' -->
 		</c:forEach>
 	</table>
 	</section>

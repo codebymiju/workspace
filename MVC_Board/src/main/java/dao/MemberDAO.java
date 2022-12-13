@@ -12,7 +12,7 @@ import vo.MemberBean;
 
 public class MemberDAO {
 	
-private MemberDAO() {} // 1. 생성자 (private)
+	private MemberDAO() {} // 1. 생성자 (private)
 	
 	private static MemberDAO instance = new MemberDAO(); // 2. 인스턴스(private+static)
 
@@ -27,6 +27,8 @@ private MemberDAO() {} // 1. 생성자 (private)
 	public void setConnection(Connection con) {
 		this.con = con;
 	}
+	//-----------------------------------------------------------------------------
+	// 싱글톤 디자인 위한 기본 세팅
 
 	// 12/09 회원가입시 DB에 정보 입력하는 메서드
 	public int insertMember(MemberBean member) {
@@ -54,9 +56,9 @@ private MemberDAO() {} // 1. 생성자 (private)
 		return insertCount;
 	} // insertMember()
 
-	// 12/09 로그인 정보와 기존 회원DB 정보가 일치하는지 확인하는 메서드
+	// 12/09 로그인 메서드 : 로그인 정보와 기존 회원DB가 일치하는지 확인하는 메서드
 	public int selectMember(MemberBean member) {
-		int selectCount = 0;
+		int loginResult = 0;
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -69,7 +71,7 @@ private MemberDAO() {} // 1. 생성자 (private)
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				selectCount = 1; 
+				loginResult = 1; 
 			}
 		} catch (SQLException e) {
 			System.out.println("MemberDAO - selectMember()");
@@ -78,18 +80,18 @@ private MemberDAO() {} // 1. 생성자 (private)
 			JdbcUtil.close(rs);
 			JdbcUtil.close(pstmt);
 		}
-		return selectCount;
+		return loginResult;
 	} // selectMember()
 
-	// 12/09 회원 목록 조회하는 메서드 
+	// 12/09 회원 목록 조회 (12/12 조건절 수정)
 	public List<MemberBean> selectMemberList() {
 		List<MemberBean> memberList = null;
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
-		try {
-			String sql = "SELECT * FROM member";
+		try { // 가입일 순, 알파벳 순등 정렬조건 설정 가능
+			String sql = "SELECT * FROM member ORDER BY id ASC";
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
@@ -97,7 +99,6 @@ private MemberDAO() {} // 1. 생성자 (private)
 			
 			while(rs.next()) {
 				MemberBean member = new MemberBean();
-				
 				member.setName(rs.getString("name"));
 				member.setId(rs.getString("id"));
 				member.setPasswd(rs.getString("passwd"));
@@ -105,6 +106,7 @@ private MemberDAO() {} // 1. 생성자 (private)
 				member.setGender(rs.getString("gender"));
 				member.setDate(rs.getDate("date"));
 				
+				// List 객체에 MemberBean 객체 추가
 				memberList.add(member);
 			}
 		} catch (SQLException e) {

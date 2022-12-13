@@ -17,4 +17,6 @@ desc board;
 
 select max(board_num) from board;
 
+/* 암호화 패스워드 관리를 위해 passwd 컬럼 타입을 VARCHAR(50)으로 변경 */
+ALTER TABLE member CHANGE passwd passwd VARCHAR(50) NOT NULL;
 

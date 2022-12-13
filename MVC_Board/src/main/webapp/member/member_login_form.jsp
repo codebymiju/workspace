@@ -6,6 +6,20 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	table {
+		margin: auto;
+		text-align: center;
+	}
+	
+	td {
+		padding-bottom: 0.7em;
+	}
+	
+	h1 {
+		text-align: center;
+	}
+</style>
 <link href="css/default.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -25,7 +39,7 @@
 				<td>패스워드</td>
 				<td><input type="password" name="passwd" required="required" size="20"></td>
 			</tr>
-			<tr>
+			<tr >
 				<td colspan="2" align="center">
 					<input type="submit" value="로그인">
 					<input type="button" value="회원가입" onclick="location.href='MemberJoinForm.me'">

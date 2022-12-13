@@ -9,7 +9,7 @@ import vo.MemberBean;
 public class MemberJoinProService {
 
 	public boolean joinMember(MemberBean member) {
-		boolean isJoinMember = false;
+		boolean isJoinSuccess = false;
 		
 		Connection con = JdbcUtil.getConnection();
 		MemberDAO dao = MemberDAO.getInstance();
@@ -19,17 +19,13 @@ public class MemberJoinProService {
 		
 			if(insertCount > 0) { // 성공시
 				JdbcUtil.commit(con);
-				isJoinMember = true;
+				isJoinSuccess = true;
 			} else { // 실패시
 				JdbcUtil.rollback(con);
 			}
 		
 		JdbcUtil.close(con);
 		
-		return isJoinMember;
+		return isJoinSuccess;
 	}
-	
-	
-	
-	
 }

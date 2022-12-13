@@ -14,10 +14,10 @@ public class MemberLogoutAction implements Action {
 		
 		// 세션 초기화 후 메인페이지로 이동
 		HttpSession session = request.getSession();
-		session.invalidate();
+		session.invalidate(); // 싹 다 날리는 것 (sId & 장바구니까지 ), remove(sId만 날리는 것)
 		
 		forward = new ActionForward();
-		forward.setPath("index.jsp");
+		forward.setPath("./");
 		forward.setRedirect(true);
 		
 		return forward;

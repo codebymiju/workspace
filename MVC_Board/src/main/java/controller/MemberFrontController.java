@@ -42,6 +42,12 @@ public class MemberFrontController extends HttpServlet {
 			forward.setPath("member/member_join_form.jsp");
 			forward.setRedirect(false); 
 			
+		} else if (command.equals("/MemberJoinResult.me")) { // 조인 성공시 결과 페이지
+			
+			forward = new ActionForward();
+			forward.setPath("member/member_join_result.jsp");
+			forward.setRedirect(false); 
+			
 		} else if (command.equals("/MemberLoginForm.me")) { // 로그인 페이지
 			
 			forward = new ActionForward();
@@ -58,7 +64,7 @@ public class MemberFrontController extends HttpServlet {
 			action = new MemberLoginProAction();
 			forward = action.execute(request, response);
 			
-		} else if (command.equals("/MemberLogout.me")) { // 로그아웃 작업 페이지
+		}  else if (command.equals("/MemberLogout.me")) { // 로그아웃 작업 페이지
 			
 			action = new MemberLogoutAction();
 			forward = action.execute(request, response);
