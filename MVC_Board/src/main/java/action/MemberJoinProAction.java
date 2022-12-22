@@ -25,13 +25,13 @@ public class MemberJoinProAction implements Action {
 				member.setGender(request.getParameter("gender"));
 				member.setEmail(request.getParameter("email1")+"@"+request.getParameter("email2"));
 				member.setId(request.getParameter("id"));
-				member.setPasswd(request.getParameter("passwd")); 
-				
-			// ---------------12/12------------------------------------------------------	
+//				member.setPasswd(request.getParameter("passwd")); 
+			
+			// ---------------12/12--------------------------12/21------------------	
 			// 패스워드 암호화(해싱) 기능 추가
 			
 			 MyMessageDigest md = new MyMessageDigest("SHA-256");
-			 md.hasing(request.getParameter("passwd"));
+ 			 member.setPasswd(md.hasing(request.getParameter("passwd"))); // 암호화 처리한 패스워드 저장 
 				
 			// ---------------12/12------------------------------------------------------	
 				

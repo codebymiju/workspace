@@ -31,9 +31,11 @@ public class MyMessageDigest {
 			System.out.println(Arrays.toString(digestResult));
 			
 			for(int i = 0; i < digestResult.length; i++) { // 5
-				
+				// int타입 정수를.16진수.대문자로.
+				strCipherText += Integer.toHexString(digestResult[i] & 0xFF).toUpperCase();
 			}
 			
+			System.out.println(strCipherText);
 			
 		} catch (NoSuchAlgorithmException e) {
 			System.out.println(hashAlgorithm + " 알고리즘이 존재하지 않습니다!");

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import encrypt.MyMessageDigest;
 import svc.MemberLoginProService;
 import vo.ActionForward;
 import vo.MemberBean;
@@ -20,8 +21,13 @@ public class MemberLoginProAction implements Action {
 		try {
 			MemberBean member = new MemberBean();
 			member.setId(request.getParameter("id"));
-			member.setPasswd(request.getParameter("passwd"));
-			
+//			member.setPasswd(request.getParameter("passwd"));
+			//-----------------------12/21--------------------------------------
+			// 패스워드 암호화(해싱) 기능 추가
+			// -> 로그인 시 입력받은 패스워드 + 암호화 된 패스워드끼리 비교 수행
+			MyMessageDigest md = new MyMessageDigest("SHA-256");
+			member.setPasswd(md.hasing(request.getParameter("passwd")));
+			//------------------------------------------------------------------
 			MemberLoginProService service = new MemberLoginProService();
 			int serviceCount =  service.loginMember(member);
 			
