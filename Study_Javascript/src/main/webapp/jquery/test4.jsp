@@ -22,8 +22,11 @@
 		});
 		//--------------------------------------------------------
 		// empty() 함수 : 제거
-		$("#h3_2").empty();
-		$("#h3_2").remove();
+// 		$("#h3_2").empty(); // <h3>는 남아있음
+		$("#h3_2").remove(); 
+		
+// 		$("#ta").val($("#wrap").html()); // 해당 태그의 값이 나옴(태그x)
+		$("#ta").html($("#wrap").html()); // html 태그 요소 그대로 설정
 		
 	});
 	
@@ -37,6 +40,6 @@
 		<h3 id="h3_2">제목2&nbsp;<span>제목2-1</span>&nbsp;<span>제목2-2</span></h3>
 		<h3 id="h3_3">제목3</h3>
 	</div>
-	<textarea rows="5" cols="50"></textarea>
+	<textarea id="ta" rows="5" cols="50"></textarea>
 </body>
 </html>
